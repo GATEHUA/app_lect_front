@@ -23,11 +23,9 @@ import { UserForm } from "./Pages/UserForm";
 import { Prueba } from "./components/Prueba";
 import { ReadingForm } from "./Pages/ReadingForm";
 import { ParrafosPage } from "./Pages/ParrafosPage";
-import { Quiz } from "./pruebaQuiz/Quiz";
 import { QuestionsPage } from "./Pages/QuestionsPage";
 import { ReadingPage } from "./Pages/ReadingPage";
 import { Loading } from "./components/utils/Loading";
-import Quill from "./pruebaQuiz/prueba/Quill";
 import { Paragraphs } from "./Pages/Paragraphs";
 import { QuestionxAnswer } from "./Pages/QuestionxAnswer";
 import { CreateQuestionU } from "./Pages/CreateQuestionU";
@@ -65,9 +63,6 @@ export default function App() {
     <>
       <Toaster position="top-center" closeButton richColors />
       <Routes>
-        <Route path="/quill" element={<Quill />} />
-
-        <Route path="/quiz" element={<Quiz />} />
         <Route path="*" element={<h1>404</h1>} />
         <Route
           element={
