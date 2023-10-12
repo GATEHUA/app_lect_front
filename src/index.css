@@ -1,0 +1,212 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate {
+  animation: rotate 3s linear infinite; /* Ajusta la duración y otras propiedades según tus preferencias */
+}
+
+body {
+  /* @apply dark:bg-slate-800 bg-slate-200; */
+  @apply dark:bg-slate-800;
+}
+*:focus {
+  @apply outline-none ring-1;
+}
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+/* input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: none;
+} */
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+/* input[type="date"]::-webkit-calendar-picker-indicator {
+  position: relative;
+  right: 1.625rem;
+} */
+.miInputDate[type="date"]::-webkit-calendar-picker-indicator {
+  position: relative;
+  right: 1.2rem;
+}
+.link {
+  @apply p-2.5 flex rounded-md gap-6 items-center md:cursor-pointer cursor-default duration-300 font-medium hover:bg-slate-100 dark:hover:bg-slate-700 uppercase;
+}
+
+.active {
+  @apply bg-blue-100 dark:bg-slate-600 dark:text-blue-400 text-blue-600;
+}
+
+/* Clases CSS para animación de ancho */
+.sidebar-open {
+  width: 16rem;
+  transition: width 0.3s ease-in-out;
+}
+
+.sidebar-closed {
+  width: 4rem;
+  transition: width 0.3s ease-in-out;
+}
+@media screen and (max-width: 640px) {
+  .sidebar-open {
+    width: 0; /* Mueve el sidebar fuera de la vista a la izquierda */
+    transition: 0.1s ease-in-out;
+  }
+  .sidebar-closed {
+    width: 16rem;
+    transition: 0s ease-in-out;
+  }
+}
+
+/* Clase CSS para rotación del botón */
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 8px;
+  background-color: transparent;
+  /* or add it to the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(209 213 219);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(178, 185, 197);
+}
+::-webkit-scrollbar-thumb:active {
+  background: rgb(156, 163, 175);
+}
+
+.pressTouch {
+  transform: translateY(6px);
+  box-shadow: 0px 0px 0px #e6a100;
+}
+.initialTouchColorSec {
+  box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.4);
+}
+.initialTouchColorGame {
+  box-shadow: 0px 6px 0px rgba(0, 0, 0, 0.2);
+}
+.initialTouchColorCompetado {
+  box-shadow: 0px 6px 0px #e6a100;
+}
+.initialTouchColorCompetadoTooltip {
+  box-shadow: 0px 4px 0px #ffefb3;
+}
+.initialTouchColorBack {
+  box-shadow: 0px 6px 0px #cc3c3c;
+}
+.initialTouchColorSky {
+  box-shadow: 0px 6px 0px #00a47d;
+}
+.initialTouchColorBasic {
+  box-shadow: 0px 6px 0px #46a302;
+}
+.initialTouchColorBasicTooltip {
+  box-shadow: 0px 4px 0px #cdf0b4;
+}
+.initialTouchColorIntermediate {
+  box-shadow: 0px 6px 0px #168dc5;
+}
+.initialTouchColorIntermediateTooltip {
+  box-shadow: 0px 4px 0px #bbe7fc;
+}
+.initialTouchColorAdvanced {
+  box-shadow: 0px 6px 0px #cc7800;
+}
+.initialTouchColorAdvancedTooltip {
+  box-shadow: 0px 4px 0px #ffe0b3;
+}
+
+.color-t {
+  color: #46a302;
+}
+.color-t:hover {
+  color: #000;
+}
+
+/* .button-touch > * {
+  position: relative;
+  z-index: 1;
+}
+
+.button-touch::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+} */
+
+/* Estilo para el botón */
+/* button {
+  position: relative;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+} */
+
+/* Estilo para la segunda imagen */
+._1reas {
+  position: relative;
+  z-index: 2;
+}
+
+/* Estilo para la primera imagen (como fondo) */
+._1Pfqd {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  z-index: 1;
+  /* pointer-events: none; */
+}
+
+/* Up */
+/* ::-webkit-scrollbar-button:single-button:horizontal:decrement {
+  border-right: 13px solid rgb(209 213 219);
+  border-top: 6.5px solid transparent;
+  border-bottom: 6.5px solid transparent;
+}
+::-webkit-scrollbar-button:single-button:horizontal:increment {
+  border-left: 13px solid rgb(209 213 219);
+  border-top: 6.5px solid transparent;
+  border-bottom: 6.5px solid transparent;
+}
+::-webkit-scrollbar-button:single-button:horizontal:decrement:hover {
+  border-right: 13px solid rgb(178, 185, 197);
+}
+::-webkit-scrollbar-button:single-button:horizontal:increment:hover {
+  border-left: 13px solid rgb(178, 185, 197);
+}
+::-webkit-scrollbar-button:single-button:horizontal:decrement:active {
+  border-right: 13px solid rgb(156, 163, 175);
+}
+::-webkit-scrollbar-button:single-button:horizontal:increment:active {
+  border-left: 13px solid rgb(156, 163, 175);
+} */
