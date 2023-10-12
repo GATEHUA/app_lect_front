@@ -30,6 +30,7 @@
     "react-syntax-highlighter": "^15.5.0",
     "react-tooltip": "^5.21.1",
     "sonner": "^0.7.0",
+    "zod": "^3.22.4",
     "zustand": "^4.4.1"
   },
   "devDependencies": {
