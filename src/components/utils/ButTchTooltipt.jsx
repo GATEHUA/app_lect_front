@@ -1,5 +1,5 @@
 import { ButtonTouch } from "./ButtonTouch";
-import { Libro } from "../../icons/icons";
+import { Libro } from "../../icons/Icons";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { useNavigate } from "react-router-dom";
 
