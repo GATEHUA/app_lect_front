@@ -152,7 +152,8 @@ export const SideBar = ({ children }) => {
   );
 };
 
-<>
+{
+  /* <>
   <li>
     <NavLink to={"/"} className="link">
       <HiOutlineHome size={23} className="min-w-max" />
@@ -195,4 +196,5 @@ export const SideBar = ({ children }) => {
       Configuración
     </NavLink>
   </li>
-</>;
+</>; */
+}

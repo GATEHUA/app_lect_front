@@ -1,9 +1,17 @@
 import { IoIosAddCircle } from "react-icons/io";
 import { BsSearch } from "react-icons/bs";
 import Buttton from "./utils/Buttton";
-import { AiFillSave, AiOutlineRollback } from "react-icons/ai";
+import {
+  AiFillSave,
+  AiOutlineRollback,
+  AiFillFileAdd,
+  AiFillQuestionCircle,
+} from "react-icons/ai";
+import { PiNotebookBold } from "react-icons/pi";
 import { BsPatchQuestionFill } from "react-icons/bs";
 import { useUserStore } from "../store/UserStore";
+import { ButtonTouch } from "./utils/ButtonTouch";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 export const HeaderPageTableQuestion = ({
   onShowForm,
@@ -11,10 +19,40 @@ export const HeaderPageTableQuestion = ({
   onShowFormManyQuestions,
   onShowFormQuestion,
 }) => {
+  const params = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  console.log("location");
+
+  const showButton = location.pathname.startsWith("/create_question_u/");
   const user = useUserStore((state) => state.user);
 
   return (
     <div className="flex items-center justify-between pb-4 ">
+      {showButton && (
+        <div className=" fixed top-0 right-0 p-4 flex space-x-2">
+          <ButtonTouch
+            onClick={() => navigate(`/product_final/${params.id}`)}
+            initialTouchColor={"initialTouchColorIntermediate"}
+            className={`w-full h-10 text-white text-lg rounded-lg bg-[#1cb0f6] `}
+          >
+            <div className="flex px-3 justify-center items-center space-x-2 hover:bg-[rgba(0,0,0,0.05)] h-full rounded-lg">
+              <AiFillFileAdd />
+              <p className="hidden lg:block">Producto</p>
+            </div>
+          </ButtonTouch>
+          <ButtonTouch
+            onClick={() => navigate(`/reading/${params.id}`)}
+            initialTouchColor={"initialTouchColorBack"}
+            className={`w-full h-10 text-white text-lg rounded-lg bg-[#ff4b4b] `}
+          >
+            <div className="flex px-3 justify-center items-center space-x-2 hover:bg-[rgba(0,0,0,0.05)] h-full rounded-lg">
+              <PiNotebookBold />
+              <p className="hidden lg:block">Lectura</p>
+            </div>
+          </ButtonTouch>
+        </div>
+      )}
       <div className="flex space-x-2">
         <Buttton
           onClick={() => onShowFormQuestion(true)}

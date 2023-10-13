@@ -32,9 +32,12 @@ import { CreateQuestionU } from "./Pages/CreateQuestionU";
 import { LevelSQuestions } from "./Pages/LevelSQuestions";
 import { ChallengeReading } from "./Pages/ChallengeReading";
 import { PrubTemp } from "./Pages/PrubTemp";
+import { ProductFinal } from "./Pages/ProductFinal";
+import { API_URL } from "./config";
 
 export default function App() {
   // const [loading, setLoading] = useState(false);
+
   const { user, isAuthenticated, isLoading } = useUserStore(
     (state) => ({
       user: state.user,
@@ -136,6 +139,7 @@ export default function App() {
               </div>
             }
           />
+          <Route path="/product_final/:id" element={<ProductFinal />} />
         </Route>
       </Routes>
     </>

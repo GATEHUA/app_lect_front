@@ -311,7 +311,7 @@ export const ReadingForm = () => {
 
                             <p className="mb-1 text-sm text-gray-500 dark:text-gray-400 text-center">
                               <span className="font-semibold">
-                                Cargue su foto
+                                Cargue su lectura
                               </span>
                             </p>
                           </div>

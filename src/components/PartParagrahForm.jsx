@@ -83,9 +83,9 @@ export const PartParagrahForm = ({ refParrafo, goNextParrafo }) => {
     formState: { errors },
   } = useForm({ resolver: zodResolver(createPartParrafoSchema) });
   // console.log(errors);
-  console.log("refParrafo");
-  console.log(refParrafo);
-  console.log(dataPP.current);
+  // console.log("refParrafo");
+  // console.log(refParrafo);
+  // console.log(dataPP.current);
 
   const onSubmit = handleSubmit((values) => {
     // console.log("values2");
