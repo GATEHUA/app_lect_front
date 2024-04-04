@@ -33,7 +33,7 @@ export const ChallengeReading = () => {
       ) : (
         <>
           {dataQ.current.length > 0 ? (
-            <div className="grid grid-cols-4 gap-8 p-8">
+            <div className="grid md:grid-cols-4 grid-cols-1 gap-8 p-8">
               {dataQ.current.map((v) => (
                 <button
                   key={v._id}

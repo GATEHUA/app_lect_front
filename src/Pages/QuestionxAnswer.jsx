@@ -109,10 +109,17 @@ export const QuestionxAnswer = () => {
     );
     const content = {
       contenido: values.contenido,
+      // puntos:
+      //   found?.estado === "Correcto"
+      //     ? dataPr.current[currentQuestion].puntobaserespuesta
+      //     : found?.estado === "Incorrecto"
+      //     ? 0
+      //     : 2,
       puntos:
         found?.estado !== "Incorrecto"
           ? dataPr.current[currentQuestion].puntobaserespuesta
           : 0,
+
       estado: found?.estado || "No definido",
     };
 
@@ -197,7 +204,8 @@ export const QuestionxAnswer = () => {
           )}
           {dataPr.current.length === 0 ? (
             <div className="w-full pt-32 flex justify-center items-center">
-              No hay Preguntas para mostrar
+              No hay Preguntas para mostrar, sus preguntas aún no fueron
+              aprobadas
             </div>
           ) : (
             <div className="flex flex-col items-center text-justify  p-2 lg:pt-20  pb-12 md:p-0 pt-20 overflow-auto">

@@ -13,7 +13,38 @@ export const ButtonTouch = ({
   const handleMouseDown = () => {
     botonA.current.className = `${styleBase} pressTouch`;
   };
-  //   console.log(botonA.current);
+  const handleTouchStart = () => {
+    botonA.current.className = `${styleBase} pressTouch`;
+  };
+
+  const handleTouchEnd = () => {
+    botonA.current.className = `${styleBase + " " + initialTouchColor}`;
+  };
+  useEffect(() => {
+    const buttonElement = botonA.current;
+
+    if ("ontouchstart" in window) {
+      // Dispositivo táctil, ejecutar el código específico para móviles
+      buttonElement.addEventListener("touchstart", handleTouchStart);
+      buttonElement.addEventListener("touchend", handleTouchEnd);
+
+      return () => {
+        buttonElement.removeEventListener("touchstart", handleTouchStart);
+        buttonElement.removeEventListener("touchend", handleTouchEnd);
+      };
+    }
+  }, [styleBase]);
+  // useEffect(() => {
+  //   const buttonElement = botonA.current;
+
+  //   buttonElement.addEventListener("touchstart", handleTouchStart);
+  //   buttonElement.addEventListener("touchend", handleTouchEnd);
+
+  //   return () => {
+  //     buttonElement.removeEventListener("touchstart", handleTouchStart);
+  //     buttonElement.removeEventListener("touchend", handleTouchEnd);
+  //   };
+  // }, [styleBase]);
   useEffect(() => {
     const handleMouseUp = () => {
       botonA.current.className = `${styleBase + " " + initialTouchColor} `;

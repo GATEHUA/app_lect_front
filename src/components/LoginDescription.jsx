@@ -15,7 +15,9 @@ const LoginDescription = () => {
   return (
     <div className="md:flex md:items-center text-center md:text-left mx-auto">
       <a href="/">
-        <img src="./images/i_c.png" className="w-20 m-auto" alt="" />
+        {/* <div className="rounded-full bg-white p-2"> */}
+        <img src="./images/fondo.png" className="w-40  m-auto" alt="" />
+        {/* </div> */}
       </a>
       <div className="md:ml-4 md:mt-0 mt-2">
         <h1 className="dark:text-white text-blue-500 text-4xl font-bold">

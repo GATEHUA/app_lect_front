@@ -10,6 +10,8 @@ export const createPartParrafoSchema = z.object({
   //   //   if (files.length === 0) return null;
   //   return files;
   // }),
+  resumenOral: z.instanceof(File, { message: "Campo requerido" }),
+  fraseOral: z.instanceof(File, { message: "Campo requerido" }),
   resumenEscrito: z
     .string({ required_error: "Campo requerido" })
     .nonempty({ message: "Campo requerido" }),

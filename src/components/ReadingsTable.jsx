@@ -2,7 +2,6 @@ import React from "react";
 import { BiSolidUserCircle } from "react-icons/bi";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin2Line } from "react-icons/ri";
-import { API_URL } from "../config";
 
 import { useNavigate } from "react-router-dom";
 import { HeadTable } from "./HeadTable";

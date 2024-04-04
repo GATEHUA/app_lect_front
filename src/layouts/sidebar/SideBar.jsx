@@ -1,6 +1,8 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
+import { BsFillPenFill } from "react-icons/bs";
+
 import { RiSwordLine } from "react-icons/ri";
 import { AiFillCheckCircle } from "react-icons/ai";
 import { HiOutlineHome } from "react-icons/hi2";
@@ -13,9 +15,17 @@ import { SlSettings } from "react-icons/sl";
 import { ImExit } from "react-icons/im";
 import { useUserStore } from "../../store/UserStore";
 import { toast } from "sonner";
+import { MdLightMode, MdDarkMode } from "react-icons/md";
+import { HiMiniComputerDesktop } from "react-icons/hi2";
+import { useThemeStore } from "../../store/ThemeSore";
 
 export const SideBar = ({ children }) => {
   const user = useUserStore((state) => state.user);
+  const theme = useThemeStore((state) => state.theme);
+  const { darkTheme, ligthTheme, systemTheme } = useThemeStore();
+
+  const element = document.documentElement;
+
   const navigate = useNavigate();
   const { signOut } = useUserStore();
   const onLogout = () => {
@@ -88,6 +98,14 @@ export const SideBar = ({ children }) => {
                     </NavLink>
                   </li>
                 )}
+                {user.rol !== "Usuario" && (
+                  <li>
+                    <NavLink to={"/qualify/my"} className="link">
+                      <BsFillPenFill size={23} className="min-w-max" />
+                      Calificar
+                    </NavLink>
+                  </li>
+                )}
 
                 <li>
                   <NavLink to={"/ranking"} className="link">
@@ -95,14 +113,14 @@ export const SideBar = ({ children }) => {
                     Clasificación
                   </NavLink>
                 </li>
-                <li>
+                {/* <li>
                   <NavLink to={"/challenges"} className="link">
                     <RiSwordLine size={23} className="min-w-max" />
                     Desafios
                   </NavLink>
-                </li>
+                </li> */}
                 <li>
-                  <NavLink to={"/perfil/:id"} className="link">
+                  <NavLink to={`/perfil/${user._id}`} className="link">
                     <BiUser size={23} className="min-w-max" />
                     Perfil
                   </NavLink>
@@ -112,6 +130,31 @@ export const SideBar = ({ children }) => {
                     <SlSettings size={23} className="min-w-max" />
                     Configuración
                   </NavLink>
+                </li>
+                <li>
+                  <div className="flex p-2.5 bg-blue-50 dark:bg-slate-700 items-center rounded-md justify-between">
+                    <MdLightMode
+                      onClick={ligthTheme}
+                      size={23}
+                      className={` hover:text-blue-600 cursor-pointer ${
+                        theme == "" && "text-blue-500 min-w-max"
+                      }`}
+                    />
+                    <MdDarkMode
+                      onClick={darkTheme}
+                      size={23}
+                      className={` hover:text-blue-600 cursor-pointer ${
+                        theme == "dark" && "text-blue-500 min-w-max"
+                      }`}
+                    />
+                    <HiMiniComputerDesktop
+                      onClick={systemTheme}
+                      size={23}
+                      className={` hover:text-blue-600 cursor-pointer ${
+                        theme == "system" && "text-blue-500 min-w-max"
+                      }`}
+                    />
+                  </div>
                 </li>
               </>
             </ul>
@@ -128,7 +171,7 @@ export const SideBar = ({ children }) => {
           </div>
           <div
             onClick={toggleSidebar}
-            className={`absolute w-fit h-fit z-50 right-2.5 hover:bg-slate-700 rounded-full  p-2.5 bottom-5 cursor-pointer sm:block hidden ${arrowClass}`}
+            className={`absolute w-fit h-fit z-50 right-2.5 dark:hover:bg-slate-700 hover:bg-slate-100 rounded-full  p-2.5 bottom-5 cursor-pointer sm:block hidden ${arrowClass}`}
           >
             <IoIosArrowBack size={25} />
           </div>

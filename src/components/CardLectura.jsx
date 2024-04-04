@@ -1,5 +1,5 @@
 import React from "react";
-import { API_URL } from "../config";
+import { BUCKET } from "../config";
 
 const CardLectura = ({ lectura }) => {
   const {
@@ -17,7 +17,7 @@ const CardLectura = ({ lectura }) => {
       <div className="h-96 w-72">
         <img
           className="h-full w-full object-cover transition-transform duration-500 group-hover:rotate-3 group-hover:scale-125"
-          src={`${API_URL}/public/lectura/portada/${portadaUrl}`}
+          src={`${BUCKET}/public/lectura/portada/${portadaUrl}`}
           alt="asd"
         />
       </div>

@@ -72,8 +72,8 @@ export const Paragraphs = () => {
               No hay Parrafos para mostrar{" "}
             </div>
           ) : (
-            <div className="flex flex-col items-center text-justify  p-2 lg:pt-24  pb-12 md:p-0 pt-20 overflow-auto">
-              <div className="w-[67%] mx-32 h-4 mb-4 bg-gray-200 rounded-full dark:bg-gray-700 ">
+            <div className="flex flex-col items-center text-justify  p-2 lg:pt-8  pb-8 md:p-0 pt-8 overflow-auto">
+              <div className="w-[67%] mx-32 h-4 mb-3 bg-gray-200 rounded-full dark:bg-gray-700 ">
                 <div
                   className="h-4 pt-0.5 pb-1 px-2 bg-[#58cc02] rounded-full "
                   style={{
@@ -85,7 +85,7 @@ export const Paragraphs = () => {
                   <div className=" w-full bg-[#79d635] h-1.5" />
                 </div>
               </div>
-              <div className="flex p-3 justify-center space-x-4 items-center">
+              <div className="flex p-2 justify-center space-x-4 items-center">
                 <ButtonTouch
                   type="button"
                   disabled={currentParafo === 0}

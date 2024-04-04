@@ -2,7 +2,7 @@ import React from "react";
 import { BiSolidUserCircle } from "react-icons/bi";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin2Line } from "react-icons/ri";
-import { API_URL } from "../config";
+import { BUCKET } from "../config";
 
 import { useUserStore } from "../store/UserStore";
 import { useNavigate } from "react-router-dom";
@@ -65,12 +65,12 @@ export const UsersTable = ({
 
                     <td
                       scope="row"
-                      className="flex justify-center items-center px-2 py-4 text-gray-900 whitespace-nowrap dark:text-white"
+                      className="flex justify-start items-center px-2 py-4 text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {user.fotoPerfil ? (
                         <img
                           className="w-10 h-10 rounded-full"
-                          src={`${API_URL}/public/usuario/foto/${user.fotoPerfil}`}
+                          src={`${BUCKET}/public/usuario/foto/${user.fotoPerfil}`}
                         />
                       ) : (
                         <BiSolidUserCircle className="w-10 h-10 rounded-full dark:bg-slate-500 text-gray-300" />

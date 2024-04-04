@@ -3,8 +3,6 @@ import { Libro } from "../../icons/Icons";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { useNavigate } from "react-router-dom";
 
-import { API_URL } from "../../config";
-
 export const ButTchTooltipt = ({
   // onClick,
   colorPr,
@@ -42,8 +40,8 @@ export const ButTchTooltipt = ({
       >
         <div className={`bg-[${colorPr}] w-full h-full min-w-[14.5rem]  `}>
           <div
-            className="text-base font-semibold tracking-tight mb-1"
-            style={{ wordSpacing: "-0.2em" }}
+            className="text-base font-semibold mb-1"
+            // style={{ wordSpacing: "-0.2em" }}
           >
             {v.titulo}
           </div>
@@ -63,7 +61,7 @@ export const ButTchTooltipt = ({
             }}
           >
             {/* <a
-              href={`${API_URL}/public/lectura/contenido/${v.contenido}`}
+              href={`${BUCKET}/public/lectura/contenido/${v.contenido}`}
               target="_blank"
             >
               {" "}

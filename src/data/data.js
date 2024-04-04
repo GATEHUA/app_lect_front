@@ -9,6 +9,65 @@ export const headTableUsers = [
   "Telefono",
   "Verificado",
 ];
+export const headTableObs = [
+  "Acciones",
+  "Contenido",
+  "Sección",
+  "Estado",
+  "Comentario del Alumno",
+];
+
+export const headTableEstudiantes = [
+  "N°",
+  "Apellidos y Nombres",
+  "Fecha de Nacimiento",
+  "Aula",
+  "Telefono",
+  "Lecturas",
+];
+
+export const headTablePPQualy = [
+  "N°",
+  "Acciones",
+  "Puntos",
+  "Parrafo",
+  "Lectura",
+  "Explicación",
+  "Resumen",
+  "Frase",
+  "Resumen Escrito",
+  "Frase Escrito",
+];
+
+export const headTableResQualy = [
+  "N°",
+  "Acciones",
+  "Puntos",
+  "Pregunta",
+  "Respuesta",
+  "Estado",
+];
+export const headTableSNQualy = [
+  "N°",
+  "Acciones",
+  "Puntos",
+  "Pregunta",
+  "Nivel Seleccionado",
+  "Nivel Correcto",
+  "Estado",
+];
+export const headTableYPQualy = [
+  "Acciones",
+  "Mostrar en Desafios",
+  "Puntos",
+  // "Esquema",
+  // "Criterio",
+  "Nivel",
+  "Pregunta",
+  "Alternativas",
+  "Tipo",
+  "Respuesta correcta(pts.)",
+];
 export const headTableReadings = [
   "Acciones",
   "Titulo",
@@ -19,8 +78,8 @@ export const headTableReadings = [
 ];
 export const headTableQuestions = [
   "Acciones",
-  "Esquema",
-  "Criterio",
+  // "Esquema",
+  // "Criterio",
   "Nivel",
   "Pregunta",
   "Alternativas",
@@ -33,6 +92,13 @@ export const headTableAlternatives = [
   "Alternativa",
   "Estado",
   "Retroalimentación",
+];
+
+export const headTableRefLecturas = [
+  "Acciones",
+  "Titulo",
+  "Estado",
+  // "Retroalimentación",
 ];
 
 // contenido

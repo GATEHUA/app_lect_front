@@ -33,7 +33,16 @@ import { LevelSQuestions } from "./Pages/LevelSQuestions";
 import { ChallengeReading } from "./Pages/ChallengeReading";
 import { PrubTemp } from "./Pages/PrubTemp";
 import { ProductFinal } from "./Pages/ProductFinal";
-import { API_URL } from "./config";
+import { Qualify } from "./Pages/Qualify";
+import { ReadingStatus } from "./Pages/ReadingStatus";
+import { QualifyPersonally } from "./Pages/QualifyPersonally";
+import { QualifyPersonallyPP } from "./Pages/QualifyPersonallyPP";
+import { QualifyPersonallyRes } from "./Pages/QualifyPersonallyRes";
+import { QualifyPersonallySN } from "./Pages/QualifyPersonallySN";
+import { QualifyPersonallyYP } from "./Pages/QualifyPersonallyYP";
+import { QualifyPersonallyPF } from "./Pages/QualifyPersonallyPF";
+import { useThemeStore } from "./store/ThemeSore";
+import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 export default function App() {
   // const [loading, setLoading] = useState(false);
@@ -46,13 +55,50 @@ export default function App() {
     }),
     shallow
   );
+  const theme = useThemeStore((state) => state.theme);
+
   const { checkAuth } = useUserStore();
 
+  const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  function onWindowMatch() {
+    if (theme == "dark" || (theme == "system" && darkQuery.matches)) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }
+
   useEffect(() => {
-    // setLoading(true);
+    onWindowMatch();
+    // if (theme == "dark") {
+    //   document.documentElement.classList.add("dark");
+    // } else if (theme == "") {
+    //   document.documentElement.classList.remove("dark");
+    // } else if (theme == "system") {
+    //   onWindowMatch();
+    // }
+    // const handleDarkQueryChange = () => {
+    //   onWindowMatch();
+    // };
+    darkQuery.addEventListener("change", onWindowMatch);
+    return () => {
+      darkQuery.removeEventListener("change", onWindowMatch);
+    };
+  }, [theme]);
+
+  useEffect(() => {
     checkAuth();
-    // setLoading(false);
   }, []);
+
+  // darkQuery.addEventListener("change", (e) => {
+  //   if (theme == "system") {
+  //     if (e.matches) {
+  //       document.documentElement.classList.add("dark");
+  //     } else {
+  //       document.documentElement.classList.remove("dark");
+  //     }
+  //   }
+  // });
 
   if (isLoading) {
     return (
@@ -106,6 +152,35 @@ export default function App() {
               path="/myreadings/:id/question/new"
               element={<QuestionsPage />}
             />
+            <Route path="/qualify/my" element={<Qualify />} />
+            <Route path="/qualify/all" element={<Qualify />} />
+
+            <Route
+              path="/qualify/estado/:idu/:idl"
+              element={<QualifyPersonally />}
+            />
+            <Route
+              path="/qualify/partparrafo/:idu/:idl"
+              element={<QualifyPersonallyPP />}
+            />
+            <Route
+              path="/qualify/responseq/:idu/:idl"
+              element={<QualifyPersonallyRes />}
+            />
+            <Route
+              path="/qualify/clasifpregun/:idu/:idl"
+              element={<QualifyPersonallySN />}
+            />
+            <Route
+              path="/qualify/youpreguntas/:idu/:idl"
+              element={<QualifyPersonallyYP />}
+            />
+            <Route
+              path="/qualify/productfinal/:idu/:idl"
+              element={<QualifyPersonallyPF />}
+            />
+
+            <Route path="/qualify/lectcomp" element={<Qualify />} />
 
             <Route path="/reading/new" element={<LecturaFormPage />} />
             {/* <Route path="/readings" element={<AllLecturasUser />} /> */}
@@ -114,11 +189,11 @@ export default function App() {
             <Route path="/users" element={<UsersPage />} />
             <Route path="/users/new" element={<UserForm />} />
             <Route path="/users/:id/edit" element={<UserForm />} />
+            <Route path="/settings" element={<UserForm />} />
 
             <Route path="/ranking" element={<RankingPage />} />
             <Route path="/perfil/:id" element={<PerfilPage />} />
             <Route path="/pregunta/new" element={<PreguntaFormPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
           </Route>
           <Route path="/reading/:id" element={<ReadingPage />} />
           <Route path="/paragraphs_reading/:id" element={<Paragraphs />} />
@@ -134,12 +209,13 @@ export default function App() {
           <Route
             path="/create_question_u/:id"
             element={
-              <div className="bg-slate-800 min-h-screen">
+              <div className="dark:bg-slate-800 min-h-screen">
                 <QuestionsPage />
               </div>
             }
           />
           <Route path="/product_final/:id" element={<ProductFinal />} />
+          <Route path="/readingstatus/:id" element={<ReadingStatus />} />
         </Route>
       </Routes>
     </>

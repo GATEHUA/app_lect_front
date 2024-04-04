@@ -1,7 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { ButtonTouch } from "../components/utils/ButtonTouch";
 import { PiNotebookBold } from "react-icons/pi";
-import { HiOutlineHome } from "react-icons/hi2";
+import HTMLReactParser from "html-react-parser";
+
+import JoditEditor from "jodit-react";
+import { GrStatusCriticalSmall } from "react-icons/gr";
 import Label from "../components/utils/Label";
 import {
   AiOutlineCloudUpload,
@@ -18,9 +21,11 @@ import {
   createProductoFinalRequest,
   getProductoFinalRequest,
 } from "../api/productoFinal";
-import { API_URL } from "../config";
+import { BUCKET } from "../config";
 
 export const ProductFinal = () => {
+  const editor = useRef(null);
+
   const navigate = useNavigate();
   const params = useParams();
   const dataPF = useRef(null);
@@ -32,11 +37,17 @@ export const ProductFinal = () => {
     return file;
   }
   const getProductoFinal = async () => {
-    const { data } = await getProductoFinalRequest(params.id);
-    dataPF.current = data;
-    setValue("texto", data.texto);
-    setAudioEs(data.audio);
-    setArchivoNameEs(data.archivo);
+    try {
+      const { data } = await getProductoFinalRequest(params.id);
+      dataPF.current = data;
+      setValue("texto", data.texto);
+      setValue("textoEnri", data.textoEnri);
+
+      setAudioEs(data.audio);
+      setArchivoNameEs(data.archivo);
+    } catch (error) {
+      console.log(error);
+    }
   };
   const addAudioElement = (blob, parentElement) => {
     const url = URL.createObjectURL(blob);
@@ -61,7 +72,12 @@ export const ProductFinal = () => {
     },
   });
   //   { resolver: zodResolver(  ) }
+  const handleEditorBlurJodit = (content) => {
+    setValue("textoEnri", content);
+  };
+  console.log(errors[""]?.message);
   const onSubmit = handleSubmit((values) => {
+    // console.log(values);
     toast.promise(createProductoFinalRequest(values, params.id), {
       className: "dark:bg-gray-700 dark:text-white",
       loading: "Cargando...",
@@ -121,8 +137,19 @@ export const ProductFinal = () => {
             </div>
           </ButtonTouch>
         </div>
-
         <div className=" fixed top-0 right-0 p-5">
+          <ButtonTouch
+            onClick={() => navigate(`/readingstatus/${params.id}`)}
+            initialTouchColor={"initialTouchColorIntermediate"}
+            className={`w-full h-10 text-lg rounded-lg bg-[#1cb0f6] `}
+          >
+            <div className="flex px-3 justify-center items-center space-x-2 hover:bg-[rgba(0,0,0,0.05)] h-full rounded-lg">
+              <GrStatusCriticalSmall />
+              <p className="hidden lg:block">Estado</p>
+            </div>
+          </ButtonTouch>
+        </div>
+        {/* <div className=" fixed top-0 right-0 p-5">
           <ButtonTouch
             onClick={() => navigate(`/`)}
             initialTouchColor={"initialTouchColorIntermediate"}
@@ -133,16 +160,19 @@ export const ProductFinal = () => {
               <p className="hidden lg:block">Inicio</p>
             </div>
           </ButtonTouch>
-        </div>
-        <div className=" flex justify-center items-center min-h-screen h-full">
-          <form onSubmit={onSubmit} className="w-full md:px-48 sm:px-8 px-4">
+        </div> */}
+        <div className=" flex justify-center items-center pt-9 min-h-screen h-full">
+          <form
+            onSubmit={onSubmit}
+            className="w-full md:px-48 sm:px-8 px-4 space-y-2"
+          >
             <div className="text-center text-xl font-semibold pb-4">
-              Ingrese su producto final (texto y audio opcionales, archivo en
-              pdf)
+              Ingrese su producto final (texto, enlace de video y audio
+              opcionales, archivo en pdf)
             </div>
             <div>
               <Label htmlFor="texto" className="dark:text-white mb-2 w-full">
-                Texto
+                Texto o enlace de video
               </Label>
               <textarea
                 {...register("texto")}
@@ -189,7 +219,7 @@ export const ProductFinal = () => {
                       <div>No se cargó un audio</div>
                     ) : (
                       <audio
-                        src={`${API_URL}/public/lectura/audio/${audioEs}`}
+                        src={`${BUCKET}/public/lectura/audio/${audioEs}`}
                         controls
                       />
                     ))}
@@ -278,7 +308,7 @@ export const ProductFinal = () => {
                       <>
                         <div className="text-sm  w-[287%]">{archivoNameEs}</div>
                         <a
-                          href={`${API_URL}/public/lectura/archivo/${archivoNameEs}`}
+                          href={`${BUCKET}/public/lectura/archivo/${archivoNameEs}`}
                           target="_blank"
                           className="hover:text-sky-500"
                         >
@@ -293,27 +323,63 @@ export const ProductFinal = () => {
                 <span className="text-red-500">{errors.archivo.message}</span>
               )}
             </div>
-            {dataPF.current ? (
-              <ButtonTouch
-                type="button"
-                initialTouchColor={"initialTouchColorBasic"}
-                onClick={() => navigate(`/`)}
-                className={`w-full h-10 text-lg rounded-lg bottom-0 mb-7  bg-[#58cc02] mt-4 `}
-              >
-                <div className="flex justify-center items-center space-x-2 hover:bg-[rgba(0,0,0,0.05)] h-full rounded-lg">
-                  <p>Ir a Inicio</p>
-                </div>
-              </ButtonTouch>
-            ) : (
-              <ButtonTouch
-                initialTouchColor={"initialTouchColorBasic"}
-                className={`w-full h-10 text-lg rounded-lg bottom-0 mb-7  bg-[#58cc02] mt-4 `}
-              >
-                <div className="flex justify-center items-center space-x-2 hover:bg-[rgba(0,0,0,0.05)] h-full rounded-lg">
-                  <p>Guardar Producto</p>
-                </div>
-              </ButtonTouch>
+
+            <div className="w-full bg-slate-800 text-black">
+              <Label htmlFor="texto" className="dark:text-white mb-2 w-full">
+                Contenido Enriquecido
+              </Label>
+              {dataPF.current ? (
+                dataPF.current.textoEnri ? (
+                  <div className="dark:text-white">
+                    {HTMLReactParser(dataPF.current.textoEnri)}
+                  </div>
+                ) : (
+                  <div className="flex dark:text-white justify-center pt-2">
+                    No existe formato enriquecido
+                  </div>
+                )
+              ) : (
+                <JoditEditor
+                  // config={{
+                  //   language: "es",
+                  // }}
+                  onBlur={handleEditorBlurJodit}
+                  value={watch("textoEnri")}
+                  ref={editor}
+                />
+              )}
+              {errors.textoEnri && (
+                <span className="text-red-500">{errors.textoEnri.message}</span>
+              )}
+            </div>
+
+            {errors[""]?.message && (
+              <span className="text-red-500">{errors[""]?.message}</span>
             )}
+
+            <div>
+              {dataPF.current ? (
+                <ButtonTouch
+                  type="button"
+                  initialTouchColor={"initialTouchColorBasic"}
+                  onClick={() => navigate(`/readingstatus/${params.id}`)}
+                  className={`w-full h-10 text-lg rounded-lg bottom-0 mb-7  bg-[#58cc02] mt-4`}
+                >
+                  <div className="flex justify-center items-center space-x-2 hover:bg-[rgba(0,0,0,0.05)] h-full rounded-lg">
+                    <p>Ver estado de la lectura</p>
+                  </div>
+                </ButtonTouch>
+              ) : (
+                <ButtonTouch
+                  initialTouchColor={"initialTouchColorBasic"}
+                  className={`w-full h-10 text-lg rounded-lg bottom-0 mb-7  bg-[#58cc02] mt-4 `}
+                >
+                  <div className="flex justify-center items-center space-x-2 hover:bg-[rgba(0,0,0,0.05)] h-full rounded-lg">
+                    <p>Guardar Producto</p>
+                  </div>
+                </ButtonTouch>
+              )}
+            </div>
           </form>
         </div>
       </>

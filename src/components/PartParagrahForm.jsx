@@ -12,15 +12,18 @@ import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createPartParrafoSchema } from "../schemas/partParrafo";
 import { useEffect, useRef, useState } from "react";
-import { API_URL } from "../config";
+import { BUCKET } from "../config";
 
 export const PartParagrahForm = ({ refParrafo, goNextParrafo }) => {
   // console.log("refParrafo");
 
   // console.log(refParrafo);
+  const [disableRegisterB, setDisableRegisterB] = useState(false);
 
   const [leeOralEs, setLeeOralEs] = useState(null);
   const [explicaOralEs, setExplicaOralEs] = useState(null);
+  const [resumenOralEs, setResumenOralEs] = useState(null);
+  const [fraseOralEs, setFraseOralEs] = useState(null);
 
   const dataPP = useRef(null);
   function blobToFile(blob, fileName) {
@@ -44,13 +47,19 @@ export const PartParagrahForm = ({ refParrafo, goNextParrafo }) => {
       setValue("frase", data.frase);
       setLeeOralEs(data.leeOral);
       setExplicaOralEs(data.explicaOral);
+      setResumenOralEs(data.resumenOral);
+      setFraseOralEs(data.fraseOral);
     } else {
       setValue("resumenEscrito", "");
       setValue("frase", "");
       setValue("leeOral", undefined);
       setValue("explicaOral", undefined);
+      setValue("resumenOral", undefined);
+      setValue("fraseOral", undefined);
       setLeeOralEs(null);
       setExplicaOralEs(null);
+      setResumenOralEs(null);
+      setFraseOralEs(null);
     }
   };
   useEffect(() => {
@@ -61,6 +70,14 @@ export const PartParagrahForm = ({ refParrafo, goNextParrafo }) => {
     removeAudioElement(
       document.getElementById("explicaOralAudio"),
       document.getElementById("explicaOral")
+    );
+    removeAudioElement(
+      document.getElementById("resumenOralAudio"),
+      document.getElementById("resumenOral")
+    );
+    removeAudioElement(
+      document.getElementById("fraseOralAudio"),
+      document.getElementById("fraseOral")
     );
     getPartParrafo();
   }, [refParrafo]);
@@ -88,12 +105,14 @@ export const PartParagrahForm = ({ refParrafo, goNextParrafo }) => {
   // console.log(dataPP.current);
 
   const onSubmit = handleSubmit((values) => {
+    setDisableRegisterB(true);
     // console.log("values2");
     // console.log(values);
     toast.promise(createPartParrafoRequest(values, refParrafo), {
       className: "dark:bg-gray-700 dark:text-white",
       loading: "Cargando...",
       success: () => {
+        setDisableRegisterB(false);
         goNextParrafo();
         return <div>Datos almacenados correctamente</div>;
       },
@@ -141,7 +160,7 @@ export const PartParagrahForm = ({ refParrafo, goNextParrafo }) => {
               <div id="leeOral">
                 {leeOralEs !== null && (
                   <audio
-                    src={`${API_URL}/public/lectura/leeOral/${leeOralEs}`}
+                    src={`${BUCKET}/public/lectura/leeOral/${leeOralEs}`}
                     controls
                   />
                 )}
@@ -207,7 +226,7 @@ export const PartParagrahForm = ({ refParrafo, goNextParrafo }) => {
               <div id="explicaOral">
                 {explicaOralEs !== null && (
                   <audio
-                    src={`${API_URL}/public/lectura/explicaOral/${explicaOralEs}`}
+                    src={`${BUCKET}/public/lectura/explicaOral/${explicaOralEs}`}
                     controls
                   />
                 )}
@@ -237,6 +256,137 @@ export const PartParagrahForm = ({ refParrafo, goNextParrafo }) => {
                 <span className="text-red-500">
                   {errors.explicaOral.message}
                 </span>
+              )}
+          </div>
+        </div>
+
+        <div className=" md:flex justify-between w-full md:border-t-2 ">
+          <div className="md:w-1/2  pb-6 pt-6 md:border-r-2 md:pr-6">
+            <div className="dark:text-white mb-2 w-full block text-sm font-medium text-gray-900">
+              Resumen Oral (Grabelo)
+            </div>
+            <div className="flex justify-center w-full space-x-2">
+              {watch("resumenOral") === undefined && resumenOralEs === null && (
+                <AudioRecorder
+                  onRecordingComplete={(blob) => {
+                    setValue(
+                      "resumenOral",
+                      blobToFile(blob, "resumenOralAudio.webm")
+                    );
+                    addAudioElement(
+                      blob,
+                      document.getElementById("resumenOral")
+                    );
+                  }}
+                  // audioTrackConstraints={{
+                  //   noiseSuppression: true,
+                  //   echoCancellation: true,
+                  // }}
+                  onNotAllowedOrFound={(err) => console.table(err)}
+                  downloadOnSavePress={false}
+                  downloadFileExtension="webm"
+                  mediaRecorderOptions={{
+                    audioBitsPerSecond: 128000,
+                  }}
+                  showVisualizer={true}
+                />
+              )}
+              <div id="resumenOral">
+                {resumenOralEs !== null && (
+                  <audio
+                    src={`${BUCKET}/public/lectura/resumenOral/${resumenOralEs}`}
+                    controls
+                  />
+                )}
+              </div>
+              {watch("resumenOral") !== undefined && !dataPP.current && (
+                <ButtonTouch
+                  type="button"
+                  initialTouchColor={"initialTouchColorBack"}
+                  className={`w-auto h-10 text-lg rounded-lg bg-[#ff4b4b] `}
+                  onClick={() => {
+                    setValue("resumenOral", undefined);
+                    removeAudioElement(
+                      document.getElementById("resumenOralAudio"),
+                      document.getElementById("resumenOral")
+                    );
+                  }}
+                >
+                  <div className="flex justify-center items-center p-3 hover:bg-[rgba(0,0,0,0.05)] h-full rounded-lg">
+                    <AiOutlineClose />
+                  </div>
+                </ButtonTouch>
+              )}
+            </div>
+            {errors.resumenOral &&
+              watch("resumenOral") === undefined &&
+              !dataPP.current && (
+                <span className="text-red-500">
+                  {errors.resumenOral.message}
+                </span>
+              )}
+          </div>
+          <div className="md:w-1/2  pb-6 pt-6 md:pl-6">
+            <div
+              //   htmlFor="fraseOral"
+              className="dark:text-white mb-2 w-full block text-sm font-medium text-gray-900"
+            >
+              Frase Oral (Grabelo)
+            </div>
+            <div className="flex justify-center w-full space-x-2 ">
+              {watch("fraseOral") === undefined && fraseOralEs === null && (
+                <AudioRecorder
+                  onRecordingComplete={(blob) => {
+                    setValue(
+                      "fraseOral",
+                      blobToFile(blob, "fraseOralAudio.webm")
+                    );
+                    addAudioElement(blob, document.getElementById("fraseOral"));
+                  }}
+                  // audioTrackConstraints={{
+                  //   noiseSuppression: true,
+                  //   echoCancellation: true,
+                  // }}
+                  onNotAllowedOrFound={(err) => console.table(err)}
+                  downloadOnSavePress={false}
+                  downloadFileExtension="webm"
+                  mediaRecorderOptions={{
+                    audioBitsPerSecond: 128000,
+                  }}
+                  showVisualizer={true}
+                />
+              )}
+              <div id="fraseOral">
+                {fraseOralEs !== null && (
+                  <audio
+                    src={`${BUCKET}/public/lectura/fraseOral/${fraseOralEs}`}
+                    controls
+                  />
+                )}
+              </div>
+              {watch("fraseOral") !== undefined && !dataPP.current && (
+                <ButtonTouch
+                  onClick={() => {
+                    setValue("fraseOral", undefined);
+                    removeAudioElement(
+                      document.getElementById("fraseOralAudio"),
+                      document.getElementById("fraseOral")
+                    );
+                  }}
+                  type="button"
+                  initialTouchColor={"initialTouchColorBack"}
+                  className={`w-auto h-10 text-lg rounded-lg bg-[#ff4b4b] `}
+                >
+                  <div className="flex justify-center p-3 items-center hover:bg-[rgba(0,0,0,0.05)] h-full rounded-lg">
+                    <AiOutlineClose />
+                  </div>
+                </ButtonTouch>
+              )}
+            </div>
+            {errors.fraseOral &&
+              watch("fraseOral") === undefined &&
+              !dataPP.current && (
+                <span className="text-red-500">{errors.fraseOral.message}</span>
               )}
           </div>
         </div>
@@ -283,7 +433,10 @@ export const PartParagrahForm = ({ refParrafo, goNextParrafo }) => {
         {!dataPP.current && (
           <ButtonTouch
             initialTouchColor={"initialTouchColorBasic"}
-            className={`w-full h-10 text-lg rounded-lg bottom-0 mb-7  bg-[#58cc02] mt-4 `}
+            className={`w-full h-10 text-lg rounded-lg bottom-0 mb-7  bg-[#58cc02] mt-4 ${
+              disableRegisterB ? "cursor-not-allowed " : "cursor-pointer"
+            }`}
+            disabled={disableRegisterB}
           >
             <div className="flex justify-center items-center space-x-2 hover:bg-[rgba(0,0,0,0.05)] h-full rounded-lg">
               <p>Guardar y Siguiente</p>

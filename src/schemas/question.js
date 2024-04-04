@@ -13,3 +13,13 @@ export const createQuestionSchema = z.object({
     required_error: "Campo requerido",
   }),
 });
+
+export const updateQuestionxDocenteEvalSchema = createQuestionSchema.extend({
+  puntajepregunta: z.number({
+    invalid_type_error: "Campo requerido",
+    required_error: "Campo requerido",
+  }),
+  estadoAceptacion: z
+    .string({ required_error: "Campo requerido" })
+    .nonempty({ message: "Campo requerido" }),
+});

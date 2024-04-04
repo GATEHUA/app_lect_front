@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Buttton from "../components/utils/Buttton";
 import InputText from "../components/utils/InputText";
 import Label from "../components/utils/Label";
@@ -18,12 +18,22 @@ import {
 import { toast } from "sonner";
 import { useEffect, useRef, useState } from "react";
 import { formatearDatetoText } from "../helpers/formateDate";
-import { API_URL } from "../config";
+import { BUCKET } from "../config";
+import { verifyTokenRequest } from "../api/auth";
+import { useUserStore } from "../store/UserStore";
 
 export const UserForm = () => {
+  const user = useUserStore((state) => state.user);
+
   const [foto, setFoto] = useState(null);
+
   const correoOr = useRef(null);
   const dniOr = useRef(null);
+  const idS = useRef(null);
+
+  const location = useLocation();
+  // console.log("location.pathname");
+  // console.log(location.pathname);
   const defSchema = useRef({
     defaultValues: {
       generoSexo: "Hombre",
@@ -35,7 +45,19 @@ export const UserForm = () => {
   const paramas = useParams();
   const getUser = async (id) => {
     try {
-      const { data } = await getUsuarioRequest(id);
+      let res;
+      if (location.pathname === "/settings") {
+        res = await verifyTokenRequest();
+        // const { data } = res;
+        // // idS.current = data._id;
+        // setIds(data._id);
+      } else {
+        res = await getUsuarioRequest(id);
+      }
+      const { data } = res;
+      idS.current = data._id;
+      // setIds(data._id);
+
       setValue("fechaNacimiento", formatearDatetoText(data.fechaNacimiento));
       setValue("generoSexo", data.generoSexo);
       setValue("estaVerificado", String(data.estaVerificado));
@@ -49,14 +71,19 @@ export const UserForm = () => {
       dniOr.current = data.dni;
       setValue("dni", data.dni);
       setValue("numeroTelefonicoPersonal", data.numeroTelefonicoPersonal);
+      setValue("nivel", data.nivel);
+      setValue("grado", data.grado);
+      setValue("seccion", data.seccion);
       // setValue("fotoPerfil", data.fotoPerfil);
       setFoto(data.fotoPerfil);
     } catch (error) {
       console.log(error);
     }
   };
+  console.log(idS.current);
+
   useEffect(() => {
-    if (paramas.id) {
+    if (paramas.id || location.pathname === "/settings") {
       getUser(paramas.id);
       defSchema.current = {
         resolver: zodResolver(updateUserSchema),
@@ -71,7 +98,7 @@ export const UserForm = () => {
         resolver: zodResolver(createUserSchema),
       };
     }
-  }, []);
+  }, [paramas.id]);
 
   const navigate = useNavigate();
   const {
@@ -83,23 +110,23 @@ export const UserForm = () => {
     watch,
   } = useForm(defSchema.current);
   const onSubmit = handleSubmit((values) => {
-    console.log(values);
+    // console.log(values);
     if (values.correo === correoOr.current) {
       values.correo = null;
     }
     if (values.dni === dniOr.current) {
       values.dni = null;
     }
-    console.log(values);
-    if (paramas.id) {
-      toast.promise(updateUsuarioRequest(paramas.id, values), {
+    // console.log(values);
+    if (paramas.id || location.pathname === "/settings") {
+      toast.promise(updateUsuarioRequest(idS.current, values), {
         className: "dark:bg-gray-700 dark:text-white",
         loading: "Cargando...",
         success: () => {
           setValue("deleteFotoPerfil", false);
           handleClear();
           getUser(paramas.id);
-          return <div>Usuario Actualizado Correctamente</div>;
+          return <div>Datos Actualizado Correctamente</div>;
         },
         error: (error) => {
           // setDisableRegisterB(false);
@@ -128,6 +155,9 @@ export const UserForm = () => {
             dni: null,
             numeroTelefonicoPersonal: null,
             fotoPerfil: null,
+            nivel: "",
+            grado: "",
+            seccion: "",
           });
           return <div>Usuario Creado Correctamente</div>;
         },
@@ -153,18 +183,26 @@ export const UserForm = () => {
       <div className="">
         <div className="px-7 py-7 lg:px-8 h-full">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-              {paramas.id ? "Editar usuario" : "Crear usuario"}
-            </h3>
-            <Buttton
-              onClick={() => navigate("/users")}
-              className={`text-lg px-5 py-1.5 font-medium flex justify-center items-center gap-x-2 bg-red-600  
+            {location.pathname !== "/settings" ? (
+              <h3 className="text-xl font-medium text-gray-900 dark:text-white">
+                {paramas.id ? "Editar usuario" : "Crear usuario"}
+              </h3>
+            ) : (
+              <h3 className="text-xl font-medium text-gray-900 dark:text-white">
+                Editar perfil
+              </h3>
+            )}
+            {location.pathname !== "/settings" && (
+              <Buttton
+                onClick={() => navigate("/users")}
+                className={`text-lg px-5 py-1.5 font-medium flex justify-center items-center gap-x-2 bg-red-600  
             hover:bg-red-700 focus:ring-red-400
             `}
-            >
-              Regresar
-              <AiOutlineRollback size={18} />
-            </Buttton>
+              >
+                Regresar
+                <AiOutlineRollback size={18} />
+              </Buttton>
+            )}
           </div>
           <form
             className="space-y-2"
@@ -245,8 +283,7 @@ export const UserForm = () => {
                 N° de DNI
               </Label>
               <InputText
-                {...register("dni", { valueAsNumber: true })}
-                type="number"
+                {...register("dni", { pattern: /^[0-9]+$/ })}
                 message={errors.dni?.message}
                 id="dni"
                 placeholder="N° de DNI"
@@ -340,44 +377,118 @@ export const UserForm = () => {
                 )}
               </div>
             </div>
-            <div className="flex w-full space-x-2">
-              <div className="w-1/2">
-                <Label htmlFor="rol" className="dark:text-white mb-2">
-                  Rol
+            {user.rol != "Usuario" && (
+              <div className="flex w-full space-x-2">
+                <div className="w-1/2">
+                  <Label htmlFor="rol" className="dark:text-white mb-2">
+                    Rol
+                  </Label>
+
+                  <select
+                    id="rol"
+                    className="bg-gray-50 border-[1.7px]  text-gray-900 rounded-lg block w-full dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white border-gray-300 focus:ring-blue-500 focus:border-blue-500  dark:border-gray-500 p-1.5"
+                    {...register("rol")}
+                  >
+                    <option value="Usuario">Usuario</option>
+                    <option value="Profesor">Profesor</option>
+                    <option value="Administrador">Administrador</option>
+                  </select>
+
+                  {errors.rol && (
+                    <span className="text-red-500">{errors.rol.message}</span>
+                  )}
+                </div>
+                <div className="w-1/2">
+                  <Label
+                    htmlFor="estaVerificado"
+                    className="dark:text-white mb-2"
+                  >
+                    Estado
+                  </Label>
+                  <select
+                    id="estaVerificado"
+                    className="bg-gray-50 border-[1.7px]  text-gray-900 rounded-lg block w-full dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white border-gray-300 focus:ring-blue-500 focus:border-blue-500  dark:border-gray-500 p-1.5"
+                    {...register("estaVerificado")}
+                  >
+                    <option value="true">Verificado</option>
+                    <option value="false">No verificado</option>
+                  </select>
+                  {errors.estaVerificado && (
+                    <span className="text-red-500">
+                      {errors.estaVerificado.message}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className="flex w-full space-x-3">
+              <div className="w-1/3">
+                <Label htmlFor="nivel" className="dark:text-white mb-2">
+                  Nivel
                 </Label>
-
                 <select
-                  id="rol"
-                  className="bg-gray-50 border-[1.7px]  text-gray-900 rounded-lg block w-full dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white border-gray-300 focus:ring-blue-500 focus:border-blue-500  dark:border-gray-500 p-1.5"
-                  {...register("rol")}
+                  id="nivel"
+                  className=" bg-gray-50 border-[1.7px]  text-gray-900 rounded-lg block w-full dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white border-gray-300 focus:ring-blue-500 focus:border-blue-500  dark:border-gray-500 p-1.5"
+                  {...register("nivel")}
                 >
-                  <option value="Usuario">Usuario</option>
-                  <option value="Profesor">Profesor</option>
-                  <option value="Administrador">Administrador</option>
+                  <option value="">-</option>
+                  <option value="Primaria">Primaria</option>
+                  <option value="Secundaria">Secundaria</option>
+                  {/* <option value="No definido">No definido</option> */}
                 </select>
-
-                {errors.rol && (
-                  <span className="text-red-500">{errors.rol.message}</span>
+                {errors.nivel && (
+                  <span className="text-red-500">{errors.nivel?.message}</span>
                 )}
               </div>
-              <div className="w-1/2">
-                <Label
-                  htmlFor="estaVerificado"
-                  className="dark:text-white mb-2"
-                >
-                  Estado
+              <div className="w-1/3">
+                <Label htmlFor="grado" className="dark:text-white mb-2">
+                  Grado
                 </Label>
                 <select
-                  id="estaVerificado"
+                  id="grado"
                   className="bg-gray-50 border-[1.7px]  text-gray-900 rounded-lg block w-full dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white border-gray-300 focus:ring-blue-500 focus:border-blue-500  dark:border-gray-500 p-1.5"
-                  {...register("estaVerificado")}
+                  {...register("grado")}
                 >
-                  <option value="true">Verificado</option>
-                  <option value="false">No verificado</option>
+                  <option value="">-</option>
+                  <option value="1°">1°</option>
+                  <option value="2°">2°</option>
+                  <option value="3°">3°</option>
+                  <option value="4°">4°</option>
+                  <option value="5°">5°</option>
+                  {watch("nivel") === "Primaria" && (
+                    <option value="6°">6°</option>
+                  )}
+                  {/* <option value="No definido">No definido</option> */}
                 </select>
-                {errors.estaVerificado && (
+                {errors.grado && (
+                  <span className="text-red-500">{errors.grado?.message}</span>
+                )}
+              </div>
+              <div className="w-1/3">
+                <Label htmlFor="seccion" className="dark:text-white mb-2">
+                  Sección
+                </Label>
+                <select
+                  id="seccion"
+                  className="bg-gray-50 border-[1.7px]  text-gray-900 rounded-lg block w-full dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white border-gray-300 focus:ring-blue-500 focus:border-blue-500  dark:border-gray-500 p-1.5"
+                  {...register("seccion")}
+                >
+                  <option value="">-</option>
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                  <option value="C">C</option>
+                  <option value="D">D</option>
+                  <option value="E">E</option>
+                  <option value="F">F</option>
+                  <option value="G">G</option>
+                  <option value="H">H</option>
+                  <option value="I">I</option>
+                  {/* <option value="No definido">No definido</option> */}
+                </select>
+                {errors.seccion && (
                   <span className="text-red-500">
-                    {errors.estaVerificado.message}
+                    {errors.seccion?.message}
                   </span>
                 )}
               </div>
@@ -399,7 +510,7 @@ export const UserForm = () => {
                       ) : foto && !watch("deleteFotoPerfil") ? (
                         <img
                           className="w-20 h-24 hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-500 rounded-lg"
-                          src={`${API_URL}/public/usuario/foto/${foto}`}
+                          src={`${BUCKET}/public/usuario/foto/${foto}`}
                         />
                       ) : (
                         <div className="flex flex-col items-center justify-center w-20 h-24 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">

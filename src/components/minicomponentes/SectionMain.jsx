@@ -4,7 +4,7 @@ import { RiListUnordered } from "react-icons/ri";
 export const SectionMain = ({ color, tittle, message }) => {
   return (
     <div
-      className="md:w-[45rem] h-28 sm:rounded-2xl mt-7 mb-6 text-white flex justify-between py-3 px-4"
+      className="md:w-[45rem]  h-28 sm:rounded-2xl mt-7 mb-6 text-white flex justify-between py-3 px-4"
       style={{
         background: color,
       }}

@@ -4,7 +4,7 @@ import Buttton from "./utils/Buttton";
 
 export const HeaderPageTable = ({ onShowForm, handleChangue }) => {
   return (
-    <div className="flex items-center justify-between pb-4 ">
+    <div className="flex items-center justify-between pb-4 mt-4 sm:mt-0 ">
       <div>
         <Buttton
           onClick={() => onShowForm()}

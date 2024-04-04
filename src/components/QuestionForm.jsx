@@ -112,7 +112,7 @@ export const QuestionForm = ({
     <div>
       <form onSubmit={onSubmit}>
         <div className="flex flex-col space-y-2">
-          <div>
+          <div className="hidden">
             <Label htmlFor="esquema" className="dark:text-white mb-2">
               Esquema
             </Label>
@@ -127,7 +127,7 @@ export const QuestionForm = ({
               <span className="text-red-500">{errors.esquema.message}</span>
             )}
           </div>
-          <div>
+          <div className="hidden">
             <Label htmlFor="criterio" className="dark:text-white mb-2">
               Criterio
             </Label>

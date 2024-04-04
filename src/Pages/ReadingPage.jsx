@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import HTMLReactParser from "html-react-parser";
+import { MdMenu } from "react-icons/md";
 
 import { pdfjs } from "react-pdf";
 
@@ -29,7 +30,7 @@ import { AiFillProfile } from "react-icons/ai";
 
 import { Document, Page } from "react-pdf";
 
-import { API_URL } from "../config";
+import { BUCKET } from "../config";
 import { Loading } from "../components/utils/Loading";
 import { ButtonTouch } from "../components/utils/ButtonTouch";
 
@@ -58,6 +59,11 @@ export const ReadingPage = () => {
   useEffect(() => {
     getReading();
   }, []);
+  const [isOpen, setIsOpen] = useState(true);
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+  const sidebarClass = isOpen ? "sidebar-openLect" : "sidebar-closedLect";
 
   return (
     <div className="dark:bg-slate-800 h-full min-h-[100vh] w-full font-Poppins dark:text-white">
@@ -66,7 +72,11 @@ export const ReadingPage = () => {
       ) : (
         <div className="flex">
           <div className="sm:w-[75%] w-full max-h-screen overflow-auto">
-            <div className={`py-10 px-32 ${option === 4 ? "block" : "hidden"}`}>
+            <div
+              className={`py-10 sm:px-32 px-8 ${
+                option === 4 ? "block" : "hidden"
+              }`}
+            >
               {lectura.current.lectura?.texto ? (
                 <div>{HTMLReactParser(lectura.current.lectura.texto)}</div>
               ) : (
@@ -76,7 +86,9 @@ export const ReadingPage = () => {
               )}
             </div>
             <div
-              className={`py-10 px-32 ${option === 1 ? "block" : "hidden"} `}
+              className={`py-10 sm:px-32 px-8 ${
+                option === 1 ? "block" : "hidden"
+              } `}
             >
               <h1 className="flex justify-center mb-7 text-xl underline font-bold">
                 {lectura.current.lectura.titulo}
@@ -102,7 +114,7 @@ export const ReadingPage = () => {
               {lectura.current.lectura.contenido ? (
                 <iframe
                   className={`w-full h-full `}
-                  src={`${API_URL}/public/lectura/contenido/${lectura.current.lectura.contenido}`}
+                  src={`${BUCKET}/public/lectura/contenido/${lectura.current.lectura.contenido}`}
                 />
               ) : (
                 <div className="flex justify-center pt-[20.5rem]">
@@ -123,8 +135,8 @@ export const ReadingPage = () => {
                   </div>
                 }
                 loading={"Cargando..."}
-                className={`min-w-[37rem] `}
-                file={` ${API_URL}/public/lectura/contenido/${lectura.current.lectura.contenido}`}
+                className={`min-w-[37rem]`}
+                file={`${BUCKET}/public/lectura/contenido/${lectura.current.lectura.contenido}`}
               >
                 <div className="fixed top-0 left-0 z-10 space-x-1 mt-3 ml-3">
                   <button
@@ -174,7 +186,9 @@ export const ReadingPage = () => {
             </div>
           </div>
 
-          <div className="sm:w-[25%] pt-4 pb-[1.375rem] px-3 flex flex-col justify-between  h-full min-h-[100vh]">
+          <div
+            className={`sm:w-[25%] z-[999999] dark:bg-slate-800 bg-slate-200 fixed sm:sticky overflow-hidden top-0 right-0 pt-4 pb-[1.375rem] px-3 sm:flex flex-col justify-between h-full min-h-[100vh] ${sidebarClass} `}
+          >
             <ButtonTouch
               onClick={() => navigate("/")}
               initialTouchColor={"initialTouchColorBack"}
@@ -185,12 +199,12 @@ export const ReadingPage = () => {
                 <p>Regresar</p>
               </div>
             </ButtonTouch>
-            <div className="space-y-20">
+            <div className="space-y-20 sm:mt-0 mt-4">
               <div className="space-y-7">
                 <div className="text-lg font-semibold">Opciones</div>
 
                 <div className="space-y-8">
-                  <div className="w-full flex space-x-2">
+                  <div className="w-full sm:flex space-x-2 hidden">
                     <ButtonTouch
                       onClick={() => setOption(2)}
                       initialTouchColor={"initialTouchColorBack"}
@@ -243,15 +257,17 @@ export const ReadingPage = () => {
                     <p className="w-1/4 font-medium">Autor </p>{" "}
                     <div className="w-3/4">
                       <p>
-                        {lectura.current.lectura.refUsuario?.apellidoPaterno} $
-                        {lectura.current.lectura.refUsuario?.apellidoMaterno}, $
+                        {lectura.current.lectura.refUsuario?.apellidoPaterno}
+                        &nbsp;
+                        {lectura.current.lectura.refUsuario?.apellidoMaterno}
+                        ,&nbsp;
                         {lectura.current.lectura.refUsuario?.nombres}
                       </p>
                       {/* {lectura.current.lectura.refUsuario.fotoPerfil ? (
                     <img
                       className="w-10 h-10 rounded-full"
                       draggable={false}
-                      src={`${API_URL}/public/usuario/foto/${lectura.current.lectura.refUsuario.fotoPerfil}`}
+                      src={`${BUCKET}/public/usuario/foto/${lectura.current.lectura.refUsuario.fotoPerfil}`}
                     />
                   ) : (
                     <BiSolidUserCircle className="w-10 h-10 rounded-full dark:bg-slate-500 text-gray-300" />
@@ -281,7 +297,8 @@ export const ReadingPage = () => {
                   </div>
                 )}
               </div>
-
+            </div>
+            <div className="space-y-5 sm:mt-0 mt-12">
               <ButtonTouch
                 onClick={() => navigate(`/challengueRe/${params.id}`)}
                 initialTouchColor={"initialTouchColorIntermediate"}
@@ -293,18 +310,18 @@ export const ReadingPage = () => {
                   {/* <BiArrowBack style={{ transform: "scaleX(-1)" }} /> */}
                 </div>
               </ButtonTouch>
+              <ButtonTouch
+                onClick={() => navigate(`/paragraphs_reading/${params.id}`)}
+                initialTouchColor={"initialTouchColorBasic"}
+                className={`w-full h-10 text-lg rounded-lg bottom-0  bg-[#58cc02] `}
+              >
+                <div className="flex justify-center items-center space-x-2 hover:bg-[rgba(0,0,0,0.05)] h-full rounded-lg">
+                  <p>Siguiente</p>
+                  <TbPlayerTrackNextFilled />
+                  {/* <BiArrowBack style={{ transform: "scaleX(-1)" }} /> */}
+                </div>
+              </ButtonTouch>
             </div>
-            <ButtonTouch
-              onClick={() => navigate(`/paragraphs_reading/${params.id}`)}
-              initialTouchColor={"initialTouchColorBasic"}
-              className={`w-full h-10 text-lg rounded-lg bottom-0  bg-[#58cc02] `}
-            >
-              <div className="flex justify-center items-center space-x-2 hover:bg-[rgba(0,0,0,0.05)] h-full rounded-lg">
-                <p>Siguiente</p>
-                <TbPlayerTrackNextFilled />
-                {/* <BiArrowBack style={{ transform: "scaleX(-1)" }} /> */}
-              </div>
-            </ButtonTouch>
           </div>
 
           {/* <div className="flex space-x-3 items-center mt-5">
@@ -323,6 +340,19 @@ export const ReadingPage = () => {
             </button>
           </div> */}
         </div>
+      )}
+      {isOpen ? (
+        <button
+          onClick={toggleSidebar}
+          className="m-1 dark:hover:bg-slate-500 rounded-full right-0 p-1 dark:text-white block sm:hidden fixed top-0 cursor-pointer"
+        >
+          <MdMenu size={25} />
+        </button>
+      ) : (
+        <div
+          onClick={toggleSidebar}
+          className={`sm:hidden fixed inset-0 max-h-screen z-[998] bg-[rgba(0,0,0,0.5)]`}
+        ></div>
       )}
     </div>
   );

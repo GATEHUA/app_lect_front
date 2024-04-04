@@ -243,7 +243,7 @@ export const QuestionsPage = () => {
               "Crear Alternativa"
               // dataQuestion.current ? "Editar Pregunta" : "Crear Pregunta"
             }
-            className={" max-w-lg"}
+            className={"max-w-lg"}
           >
             <AlternativeForm
               getMyQuestions={getMyQuestions}

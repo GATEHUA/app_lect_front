@@ -1,12 +1,13 @@
 export function formatearFechaText(fecha) {
   const opciones = {
-    year: "2 digit",
-    month: "2 digit",
-    day: "2 digit",
-    timeZone: "UTC", // Especifica la zona horaria que deseas
-    timeZoneName: "short", // Puedes incluir el nombre de la zona horaria si lo deseas
+    year: "numeric",
+    month: "long",
+    day: "2-digit",
   };
-  return new Date(fecha).toLocaleDateString("es-ES", opciones);
+  const fechaFormateada = new Intl.DateTimeFormat("es-ES", opciones).format(
+    new Date(fecha)
+  );
+  return fechaFormateada;
 }
 
 export function formatearDatetoText(fechaISO) {

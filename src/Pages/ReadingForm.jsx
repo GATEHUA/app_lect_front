@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createReadingSchema, updateReadingSchema } from "../schemas/reading";
 import { toast } from "sonner";
 import { IoIosAddCircle } from "react-icons/io";
-import { API_URL } from "../config";
+import { BUCKET } from "../config";
 
 import {
   createLecturaRequest,
@@ -41,22 +41,22 @@ export const ReadingForm = () => {
     },
   });
   const getReading = async (id) => {
-    const { data } = await getLecturaRequest(id);
-    console.log("data");
-    console.log(data);
-    console.log("data.texto");
-    console.log(data.texto);
-
-    setValue("grado", data.grado);
-    tituloOr.current = data.titulo;
-    setValue("titulo", data.titulo);
-    setValue("fuente", data.fuente);
-    setValue("genero", data.genero);
-    setValue("texto", data.texto);
-    setValue("numpreguntasal", data.numpreguntasal);
-    setValue("nivelDificultad", data.nivelDificultad);
-    setFileName(data.contenido);
     try {
+      const { data } = await getLecturaRequest(id);
+      console.log("data");
+      console.log(data);
+      console.log("data.texto");
+      console.log(data.texto);
+
+      setValue("grado", data.grado);
+      tituloOr.current = data.titulo;
+      setValue("titulo", data.titulo);
+      setValue("fuente", data.fuente);
+      setValue("genero", data.genero);
+      setValue("texto", data.texto);
+      setValue("numpreguntasal", data.numpreguntasal);
+      setValue("nivelDificultad", data.nivelDificultad);
+      setFileName(data.contenido);
     } catch (error) {
       console.log(error);
     }
@@ -346,7 +346,7 @@ export const ReadingForm = () => {
                       <>
                         <div className="text-sm  w-[287%]">{fileName}</div>
                         <a
-                          href={`${API_URL}/public/lectura/contenido/${fileName}`}
+                          href={`${BUCKET}/public/lectura/contenido/${fileName}`}
                           target="_blank"
                           className="hover:text-sky-500"
                         >
